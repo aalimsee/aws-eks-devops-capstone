@@ -1,9 +1,28 @@
 
 
 
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
 
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+}
 
-
+terraform {
+  backend "s3" {
+    bucket  = "sctp-ce9-tfstate"
+    key     = "eks/dev/aws-eks-devops-capstone.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+  }
+}
 
 # Terraform code for dev EKS cluster
 
