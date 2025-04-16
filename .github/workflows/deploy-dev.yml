@@ -44,9 +44,13 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Update kubeconfig for dev cluster
+      - name: Update kubeconfig for EKS (dev cluster)
         run: |
           aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
 
       - name: Set GITHUB_SHA env var
         run: echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_ENV
