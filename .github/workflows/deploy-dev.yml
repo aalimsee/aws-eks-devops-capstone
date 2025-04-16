@@ -31,7 +31,7 @@ jobs:
         working-directory: ./infra/dev
         run: terraform init
 
-      - name: Terraform Plan
+      - name: Terraform Plan -refresh
         working-directory: ./infra/dev
         run: terraform plan
 
