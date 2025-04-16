@@ -26,6 +26,6 @@ jobs:
 
       - name: Build, Tag, and Push image to ECR
         run: |
-          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }}
-          docker build -t $IMAGE_URI ./product-service
+          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service
+          docker build -t $IMAGE_URI:dev-${{ github.sha }} ./product-service
           docker push $IMAGE_URI
