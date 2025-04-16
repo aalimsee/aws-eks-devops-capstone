@@ -1,6 +1,3 @@
-
-
-
 name: Deploy Infrastructure and App to EKS Dev
 
 on:
@@ -31,7 +28,7 @@ jobs:
         working-directory: ./infra/dev
         run: terraform init
 
-      - name: Terraform Plan -refresh
+      - name: Terraform Plan
         working-directory: ./infra/dev
         run: terraform plan -refresh
 
@@ -45,24 +42,14 @@ jobs:
           version: 'latest'
 
       - name: Update kubeconfig for EKS (dev cluster)
-        run: |
-          aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+        run: aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+
+      - name: Deploy product-service to EKS (with GitHub SHA image tag)
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-
-      - name: Set GITHUB_SHA env var
-        run: echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_ENV
-
-      - name: Deploy product-service to EKS
+          GITHUB_SHA: ${{ github.sha }}
         run: |
-         envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
-
-      - name: Deploy Kubernetes manifests
-        run: |
-          kubectl apply -f ./product-service/k8s/dev/
+          envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
 
       - name: Update Deployment Image
         run: |
-          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n default
+          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n dev
