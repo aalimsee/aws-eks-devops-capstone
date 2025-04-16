@@ -20,6 +20,6 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           BRANCH=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
-          IMAGE_URI="123456789012.dkr.ecr.us-east-1.amazonaws.com/product-service:${BRANCH}-${GITHUB_SHA}"
+          IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${BRANCH}-${GITHUB_SHA}"
           docker build -t $IMAGE_URI ./product-service
           docker push $IMAGE_URI
