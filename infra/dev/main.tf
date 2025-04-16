@@ -31,7 +31,7 @@ module "eks_cluster" {
   version = "20.0.0" # Make sure to pin this or latest stable
 
   cluster_name    = "dev-eks-cluster"
-  cluster_version = "1.29"
+  cluster_version = "1.30"
 
   vpc_id     = data.aws_vpcs.filtered_vpcs.ids[0]
   subnet_ids = data.aws_subnets.public.ids
