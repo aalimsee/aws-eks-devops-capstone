@@ -1,7 +1,8 @@
 
 
 
-name: Deploy to EKS Dev
+name: Deploy Infrastructure and App to EKS Dev
+
 on:
   push:
     branches: [ "dev" ]
@@ -9,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,13 +22,36 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Initialize Terraform
+        working-directory: ./infra/dev
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./infra/dev
+        run: terraform plan
+
+      - name: Terraform Apply
+        working-directory: ./infra/dev
+        run: terraform apply -auto-approve
+
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
 
-      - name: Update Deployment in Dev
+      - name: Update kubeconfig for dev cluster
         run: |
           aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
-          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n default
+
+      - name: Deploy Kubernetes manifests
+        run: |
           kubectl apply -f ./product-service/k8s/dev/
+
+      - name: Update Deployment Image
+        run: |
+          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n default
