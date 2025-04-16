@@ -4,7 +4,7 @@
 
 
 
-name: Terraform Destroy Infra
+name: Terraform Destroy Infra (dev)
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Destroy
-        working-directory: infra
+        working-directory: ./infra/dev
         run: |
           terraform init
           terraform destroy -auto-approve
