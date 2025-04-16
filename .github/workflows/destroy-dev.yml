@@ -25,6 +25,10 @@ jobs:
         with:
           terraform_version: 1.7.5
 
+      - name: Initialize Terraform
+        working-directory: ./infra/dev
+        run: terraform init
+  
       - name: Terraform Destroy
         working-directory: ./infra/dev
         run: |
