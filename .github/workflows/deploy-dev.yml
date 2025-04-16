@@ -48,6 +48,13 @@ jobs:
         run: |
           aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
 
+      - name: Set GITHUB_SHA env var
+        run: echo "GITHUB_SHA=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Deploy product-service to EKS
+        run: |
+         envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
+
       - name: Deploy Kubernetes manifests
         run: |
           kubectl apply -f ./product-service/k8s/dev/

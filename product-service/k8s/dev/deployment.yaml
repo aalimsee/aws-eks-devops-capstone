@@ -14,7 +14,7 @@ spec:
         app: product-service
     spec:
       containers:
-      - name: product-service
-        image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-latest
-        ports:
+        - name: product-service
+      image: 255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${GITHUB_SHA}
+      ports:
         - containerPort: 5000
