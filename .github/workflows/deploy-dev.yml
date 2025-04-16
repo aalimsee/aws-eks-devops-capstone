@@ -33,7 +33,7 @@ jobs:
 
       - name: Terraform Plan -refresh
         working-directory: ./infra/dev
-        run: terraform plan
+        run: terraform plan -refresh
 
       - name: Terraform Apply
         working-directory: ./infra/dev
