@@ -36,24 +36,63 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform init
+        working-directory: ./infra
         run: terraform init -backend-config=backend-${{ github.event.inputs.choice }}.config
 
       - name: Terraform workspace list
+        working-directory: ./infra
         run: terraform workspace list
 
       - name: Terraform workspace new environment and select
+        working-directory: ./infra
         run: |
           terraform workspace select ${{ github.event.inputs.choice }} || terraform workspace new ${{ github.event.inputs.choice }}
           terraform workspace list
 
       - name: Terraform plan
+        working-directory: ./infra
         run: terraform plan -var-file=${{ github.event.inputs.choice }}.tfvars
 
       - name: Terraform apply
+        working-directory: ./infra
         run: terraform apply -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve
 
-      - name: Pause 3min to verify bucket creation
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Update kubeconfig for EKS (dev cluster)
+        run: aws eks update-kubeconfig --name ${{ github.event.inputs.choice }}-eks-cluster --region us-east-1
+
+      # - name: Deploy product-service to EKS (with GitHub SHA image tag)
+      #   env:
+      #     GITHUB_SHA: ${{ github.sha }}
+      #   run: |
+      #     envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
+
+      - name: Deploy product-service to EKS (replace BRANCH_NAME + SHA in manifest)
+        run: |
+          export IMAGE_TAG="${{ github.event.inputs.choice }}-${{ github.sha }}"
+          envsubst < ./product-service/k8s/${{ github.event.inputs.choice }}/deployment.yaml | kubectl apply -f -
+
+
+      # - name: Update Deployment Image
+      #   run: |
+      #     kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${{ github.sha }} -n dev
+
+      - name: Update Deployment Image
+        run: |
+          kubectl set image deployment/product-service \
+            product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.event.inputs.choice }}-${{ github.sha }} \
+            -n ${{ github.event.inputs.choice }}
+
+
+
+      - name: Pause 3min to verify creation
         run: sleep 180
 
       - name: Terraform destroy
+        working-directory: ./infra
         run: terraform destroy -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve
