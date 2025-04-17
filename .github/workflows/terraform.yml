@@ -47,13 +47,13 @@ jobs:
           terraform workspace list
 
       - name: Terraform plan
-        run: terraform plan -var-file=${{ github.event.inputs.choice }}.tfvars
+        run: terraform plan -var-file=./infra/${{ github.event.inputs.choice }}.tfvars
 
       - name: Terraform apply
-        run: terraform apply -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve
+        run: terraform apply -var-file=./infra/${{ github.event.inputs.choice }}.tfvars -auto-approve
 
       - name: Pause 3min to verify bucket creation
         run: sleep 180
 
       - name: Terraform destroy
-        run: terraform destroy -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve
+        run: terraform destroy -var-file=./infra/${{ github.event.inputs.choice }}.tfvars -auto-approve
