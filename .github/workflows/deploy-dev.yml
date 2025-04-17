@@ -1,4 +1,4 @@
-name: Deploy Infrastructure and App to EKS Dev
+name: Deploy EKS dev Env and App
 
 on:
   push:
