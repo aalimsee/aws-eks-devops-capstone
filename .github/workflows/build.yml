@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Print current environment
-        run: echo "Deploying to ${{ENVIRONMENT}}"
+        run: echo "Deploying to $ENVIRONMENT"
 
       - name: Set environment specific variables
         run: |
