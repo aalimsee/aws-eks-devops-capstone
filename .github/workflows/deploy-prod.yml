@@ -33,15 +33,15 @@ jobs:
           terraform_version: 1.7.5
 
       - name: Initialize Terraform
-        working-directory: ./infra/dev
+        working-directory: ./infra/$BRANCH_NAME
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./infra/dev
+        working-directory: ./infra/$BRANCH_NAME
         run: terraform plan -refresh
 
       - name: Terraform Apply
-        working-directory: ./infra/dev
+        working-directory: ./infra/$BRANCH_NAME
         run: terraform apply -auto-approve
 
       - name: Setup kubectl
@@ -49,8 +49,8 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Update kubeconfig for EKS (dev cluster)
-        run: aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+      - name: Update kubeconfig for EKS (test cluster)
+        run: aws eks update-kubeconfig --name $BRANCH_NAME-eks-cluster --region us-east-1
 
       # - name: Deploy product-service to EKS (with GitHub SHA image tag)
       #   env:
