@@ -1,17 +1,43 @@
-
-
-
 name: Build and Push Docker Image
 on:
   push:
     branches: [ "dev" ]
+  pull_request:
+    branches: [ "test", "prod" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set Branch Name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "BRANCH_NAME=${{ github.base_ref }}" >> $GITHUB_ENV
+          else
+            echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Print current environment
+        run: echo "Deploying to $BRANCH_NAME"
+
+      - name: Set environment specific variables
+        run: |
+          echo "Detected branch: $BRANCH_NAME"
+          if [ "$BRANCH_NAME" = "dev" ]; then
+            echo "TF_VAR_environment=dev" >> $GITHUB_ENV
+          elif [ "$BRANCH_NAME" = "test" ]; then
+            echo "TF_VAR_environment=test" >> $GITHUB_ENV
+          elif [ "$BRANCH_NAME" = "prod" ]; then
+            echo "TF_VAR_environment=prod" >> $GITHUB_ENV
+          else
+            echo "Unknown branch: $BRANCH_NAME"
+            exit 1
+          fi
+      
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -26,6 +52,7 @@ jobs:
 
       - name: Build, Tag, and Push image to ECR
         run: |
-          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${{ github.sha }}
+          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:$BRANCH_NAME-${{ github.sha }}
+          echo "Building Docker image: $IMAGE_URI"
           docker build -t $IMAGE_URI ./product-service
           docker push $IMAGE_URI
