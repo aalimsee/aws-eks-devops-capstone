@@ -77,8 +77,9 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         run: |
           export IMAGE_TAG="${{ github.event.inputs.choice }}-${{ github.sha }}"
-          envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
-
+          envsubst < ./product-service/k8s/${{ github.event.inputs.choice }}/deployment.yaml | kubectl apply -f -
+          envsubst < ./product-service/k8s/${{ github.event.inputs.choice }}/service.yaml | kubectl apply -f -
+          
       - name: Update Deployment Image
         run: |
           kubectl set image deployment/product-service \
