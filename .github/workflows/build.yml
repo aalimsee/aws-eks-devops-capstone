@@ -2,7 +2,7 @@ name: Build and Push Docker Image
 on:
   push:
     paths:
-      - 'product-service/k8s/dev'
+      - 'product-service/**'
 
 jobs:
   build:
