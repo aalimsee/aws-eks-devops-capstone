@@ -1,7 +1,5 @@
 
-locals {
-  projectName = "aws-eks-devops-capstone"
-}
+
 
 //data "aws_vpcs" "all_vpcs" {}
 
@@ -10,7 +8,7 @@ locals {
 data "aws_vpcs" "filtered_vpcs" {
   filter {
     name   = "tag:Name"
-    values = ["*${local.projectName}*"]
+    values = ["*${var.projectName}*"]
   }
 }
 
@@ -31,7 +29,7 @@ data "aws_subnets" "public" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${local.projectName}*public*"
+    Name = "*${var.projectName}*public*"
   }
 }
 
@@ -43,7 +41,7 @@ data "aws_subnets" "private" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${local.projectName}*private*"
+    Name = "*${var.projectName}*private*"
   }
 }
 

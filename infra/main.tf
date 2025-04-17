@@ -1,26 +1,8 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-  backend "s3" {
-    bucket  = "sctp-ce9-tfstate"
-    key     = "eks/test/aws-eks-devops-capstone.tfstate"
-    region  = "us-east-1"
-    encrypt = true
-  }
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
 
 
 # EKS Cluster Role
 resource "aws_iam_role" "eks_cluster" {
-  name               = "test-eks-cluster-role"
+  name               = "dev-eks-cluster-role"
   assume_role_policy = data.aws_iam_policy_document.eks_cluster_assume_role_policy.json
 }
 
@@ -46,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
 
 # Create EKS Cluster
 resource "aws_eks_cluster" "eks" {
-  name     = "test-eks-cluster"
+  name     = "dev-eks-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
   version  = "1.30"
 
@@ -64,7 +46,7 @@ resource "aws_eks_cluster" "eks" {
 
 # Node Group IAM Role
 resource "aws_iam_role" "node_group" {
-  name               = "test-eks-node-group-role"
+  name               = "dev-eks-node-group-role"
   assume_role_policy = data.aws_iam_policy_document.node_group_assume_role_policy.json
 }
 
@@ -99,9 +81,9 @@ resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
 }
 
 # Managed Node Group
-resource "aws_eks_node_group" "test_workers" {
+resource "aws_eks_node_group" "dev_workers" {
   cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "test-workers"
+  node_group_name = "dev-workers"
   node_role_arn   = aws_iam_role.node_group.arn
   subnet_ids      = data.aws_subnets.public.ids
 
