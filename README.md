@@ -18,3 +18,4 @@ aws ecr create-repository \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1 \
   --tags Key=ProjectName,Value=aws-eks-devops-capstone
+  
