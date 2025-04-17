@@ -1,0 +1,55 @@
+name: Deploy Infrastructure and App to EKS Dev
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Initialize Terraform
+        working-directory: ./infra/dev
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./infra/dev
+        run: terraform plan -refresh
+
+      - name: Terraform Apply
+        working-directory: ./infra/dev
+        run: terraform apply -auto-approve
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Update kubeconfig for EKS (dev cluster)
+        run: aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+
+      - name: Deploy product-service to EKS (with GitHub SHA image tag)
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
+
+      - name: Update Deployment Image
+        run: |
+          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${{ github.sha }} -n dev

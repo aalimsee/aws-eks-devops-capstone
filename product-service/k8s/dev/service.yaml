@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+
+kind: Service
+metadata:
+  name: product-service
+  namespace: dev
+
+spec:
+  selector:
+    app: product-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
