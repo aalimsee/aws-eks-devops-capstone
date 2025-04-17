@@ -52,4 +52,4 @@ jobs:
 
       - name: Update Deployment Image
         run: |
-          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n dev
+          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${{ github.sha }} -n dev
