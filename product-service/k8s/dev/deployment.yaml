@@ -8,7 +8,7 @@ metadata:
   namespace: dev
 
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: product-service
@@ -24,6 +24,7 @@ spec:
             product-service:dev-${GITHUB_SHA}
           ports:
             - containerPort: 5000
+
           resources:
             requests:
               memory: "128Mi"

@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
 resource "aws_eks_cluster" "eks" {
   name     = "dev-eks-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
-  version  = "1.30"
+  version  = "1.32"
 
   vpc_config {
     subnet_ids              = data.aws_subnets.public.ids
@@ -88,8 +88,8 @@ resource "aws_eks_node_group" "dev_workers" {
   subnet_ids      = data.aws_subnets.public.ids
 
   scaling_config {
-    desired_size = 2
-    max_size     = 3
+    desired_size = 1
+    max_size     = 2
     min_size     = 1
   }
 

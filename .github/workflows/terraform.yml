@@ -87,9 +87,9 @@ jobs:
 
 
 
-      - name: Pause 3min to verify creation
-        run: sleep 180
+    #   - name: Pause 3min to verify creation
+    #     run: sleep 180
 
-      - name: Terraform destroy
-        working-directory: ./infra
-        run: terraform destroy -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve
+    #   - name: Terraform destroy
+    #     working-directory: ./infra
+    #     run: terraform destroy -var-file=${{ github.event.inputs.choice }}.tfvars -auto-approve

@@ -23,3 +23,16 @@ gh secret set AWS_SECRET_ACCESS_KEY -b"xxx" -r aalimsee/aws-eks-devops-capstone 
   --region us-east-1 \
   --tags Key=ProjectName,Value=aws-eks-devops-capstone
 ```
+
+## How to check if app running
+
+```
+aws eks list-clusters --region us-east-1
+aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+
+kubectl config current-context
+kubectl get nodes
+
+kubectl get pods -n dev
+kubectl get deployments -n dev
+```
