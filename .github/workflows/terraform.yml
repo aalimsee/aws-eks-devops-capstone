@@ -66,11 +66,15 @@ jobs:
       - name: Update kubeconfig for EKS (dev cluster)
         run: aws eks update-kubeconfig --name ${{ github.event.inputs.choice }}-eks-cluster --region us-east-1
 
-      # - name: Deploy product-service to EKS (with GitHub SHA image tag)
-      #   env:
-      #     GITHUB_SHA: ${{ github.sha }}
-      #   run: |
-      #     envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
+      - name: Create dev namespace if not exists
+        run: |
+          kubectl get namespace dev || kubectl create namespace dev
+
+      - name: Deploy product-service to EKS (with GitHub SHA image tag)
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
 
       - name: Deploy product-service to EKS (replace BRANCH_NAME + SHA in manifest)
         run: |
