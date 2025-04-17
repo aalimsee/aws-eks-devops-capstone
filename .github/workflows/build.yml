@@ -1,6 +1,8 @@
 name: Build and Push Docker Image
 on:
   push:
+    branches:
+      - main
     paths:
       - 'product-service/**'
 
@@ -54,7 +56,6 @@ jobs:
       - name: Build, Tag, and Push image to ECR
         run: |
           IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service
-          
           
           for ENV in dev test prod; do
             echo "Building image for $ENV environment"
