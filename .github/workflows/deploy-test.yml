@@ -73,3 +73,4 @@ jobs:
           kubectl set image deployment/product-service \
             product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:$BRANCH_NAME-${{ github.sha }} \
             -n $BRANCH_NAME
+
