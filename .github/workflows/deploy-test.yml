@@ -1,15 +1,22 @@
-
-
-
 name: Deploy to EKS Test
+
 on:
-  push:
-    branches: [ "test" ]
+  pull_request:
+    branches: [ "test", "prod" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Set Branch Name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+          else
+            echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -20,13 +27,49 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Initialize Terraform
+        working-directory: ./infra/dev
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./infra/dev
+        run: terraform plan -refresh
+
+      - name: Terraform Apply
+        working-directory: ./infra/dev
+        run: terraform apply -auto-approve
+
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
 
-      - name: Update Deployment in Test
+      - name: Update kubeconfig for EKS (dev cluster)
+        run: aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+
+      # - name: Deploy product-service to EKS (with GitHub SHA image tag)
+      #   env:
+      #     GITHUB_SHA: ${{ github.sha }}
+      #   run: |
+      #     envsubst < ./product-service/k8s/dev/deployment.yaml | kubectl apply -f -
+
+      - name: Deploy product-service to EKS (replace BRANCH_NAME + SHA in manifest)
         run: |
-          aws eks update-kubeconfig --name test-eks-cluster --region us-east-1
-          kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }} -n default
-          kubectl apply -f ./product-service/k8s/test/
+          export IMAGE_TAG="$BRANCH_NAME-${{ github.sha }}"
+          envsubst < ./product-service/k8s/$BRANCH_NAME/deployment.yaml | kubectl apply -f -
+
+
+      # - name: Update Deployment Image
+      #   run: |
+      #     kubectl set image deployment/product-service product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:dev-${{ github.sha }} -n dev
+
+      - name: Update Deployment Image
+        run: |
+          kubectl set image deployment/product-service \
+            product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:$BRANCH_NAME-${{ github.sha }} \
+            -n $BRANCH_NAME
