@@ -54,9 +54,15 @@ jobs:
       - name: Build, Tag, and Push image to ECR
         run: |
           IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service
-          echo "Building image: $IMAGE_URI"
-          docker build -t $IMAGE_URI:latest -t $IMAGE_URI:${{ github.sha }} ./product-service
-          docker push $IMAGE_URI $IMAGE_URI:${{ github.sha }}
+          
+          
+          for ENV in dev test prod; do
+            echo "Building image for $ENV environment"
+            echo "Building image: $IMAGE_URI"
+            docker build -t $IMAGE_URI:$ENV-${{ github.sha }} ./product-service/k8s/$ENV
+            docker push $IMAGE_URI:$ENV-${{ github.sha }}
+          done
+
 
 
   
