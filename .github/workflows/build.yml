@@ -1,10 +1,8 @@
 name: Build and Push Docker Image
 on:
   push:
-    branches:
-      - main
     paths:
-      - 'product-service/**'
+      - 'product-service/k8s/dev'
 
 jobs:
   build:
@@ -31,13 +29,10 @@ jobs:
       - name: Build, Tag, and Push image to ECR
         run: |
           IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service
-          
-          for ENV in dev; do
-            echo "Building image for $ENV environment"
-            echo "Building image: $IMAGE_URI"
-            docker build -t $IMAGE_URI:$ENV-${{ github.sha }} ./product-service/k8s/$ENV
-            docker push $IMAGE_URI:$ENV-${{ github.sha }}
-          done
+          echo "Building image: $IMAGE_URI"
+          docker build -t $IMAGE_URI:dev-${{ github.sha }} ./product-service/k8s/dev
+          docker push $IMAGE_URI:dev-${{ github.sha }}
+
 
 
 
