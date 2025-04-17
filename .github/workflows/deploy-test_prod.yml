@@ -1,8 +1,14 @@
-name: Deploy to EKS Test
+name: Deploy to EKS (Test or Prod)
 
 on:
-  pull_request:
-    branches: [ "test", "prod" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select the target environment
+        options:
+          - test
+          - prod
 
 jobs:
   deploy:
@@ -73,3 +79,4 @@ jobs:
           kubectl set image deployment/product-service \
             product-service=255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service:$BRANCH_NAME-${{ github.sha }} \
             -n $BRANCH_NAME
+

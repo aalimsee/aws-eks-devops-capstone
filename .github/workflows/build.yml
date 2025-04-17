@@ -56,3 +56,5 @@ jobs:
           echo "Building Docker image: $IMAGE_URI"
           docker build -t $IMAGE_URI ./product-service
           docker push $IMAGE_URI
+
+          
