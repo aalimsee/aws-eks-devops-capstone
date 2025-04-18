@@ -1,5 +1,13 @@
 
+# Explanation:
+# Manually triggered via GitHub UI for safety (workflow_dispatch).
+# Selects the prod Terraform workspace.
+# Runs terraform destroy to delete all provisioned infra.
+# Cleans out your frontend S3 bucket.
+# Logs completion for clear visibility.
 
+# Replace:
+# your-frontend-s3-bucket-${{ env.ENVIRONMENT }} with your actual S3 bucket name.
 
 name: Destroy Prod Environment
 
@@ -8,6 +16,7 @@ on:
 
 jobs:
   destroy-prod:
+    if: github.ref == 'refs/heads/prod'
     runs-on: ubuntu-latest
 
     env:
