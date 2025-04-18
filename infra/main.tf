@@ -42,6 +42,10 @@ resource "aws_eks_cluster" "eks" {
     aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.eks_cluster_AmazonEKSServicePolicy
   ]
+
+  tags = {
+    Team = "CE9 LACH group"
+  }
 }
 
 # Node Group IAM Role
