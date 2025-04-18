@@ -9,7 +9,7 @@
 # Terraform apply
 # Kubernetes kubectl apply for deployment.yaml and service.yaml.
 
-name: Deploy to EKS
+name: Deploy to EKS (deploy-v2)
 
 on:
   push:
