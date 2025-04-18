@@ -1,36 +1,59 @@
-name: Terraform Destroy Infra (dev)
+
+# Explanation:
+# Manually triggered via GitHub UI for safety (workflow_dispatch).
+# Selects the dev Terraform workspace.
+# Runs terraform destroy to delete all provisioned infra.
+# Cleans out your frontend S3 bucket.
+# Logs completion for clear visibility.
+
+# Replace:
+# your-frontend-s3-bucket-${{ env.ENVIRONMENT }} with your actual S3 bucket name.
+
+name: Destroy Dev Environment
 
 on:
-  workflow_dispatch:
-
-env:
-  AWS_REGION: us-east-1
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
-  destroy:
+  destroy-dev:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    env:
+      AWS_REGION: us-east-1
+      EKS_CLUSTER_NAME: dev-eks-cluster
+      ENVIRONMENT: dev
 
-      - name: Configure AWS credentials
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Setup Terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.7.5
 
-      - name: Initialize Terraform
-        working-directory: ./infra/dev
-        run: terraform init
-  
+      - name: Terraform Init
+        working-directory: ./infra
+        run: |
+          terraform init -backend-config=backend-${{ env.ENVIRONMENT }}.config
+
+      - name: Select Workspace
+        working-directory: ./infra
+        run: |
+          terraform workspace select ${{ env.ENVIRONMENT }}
+
       - name: Terraform Destroy
-        working-directory: ./infra/dev
-        run:
-          terraform destroy -auto-approve
-          
+        working-directory: ./infra
+        run: terraform destroy -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
+
+      - name: Empty Frontend S3 Bucket
+        run: |
+          aws s3 rm s3://your-frontend-s3-bucket-${{ env.ENVIRONMENT }} --recursive || echo "Bucket already empty or doesn't exist"
+
+      - name: Log completion
+        run: echo "Dev environment destroyed successfully!"

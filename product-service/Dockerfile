@@ -9,7 +9,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy actual app code
-COPY ./app/ .
+# Use this if your app.py is inside app/
+COPY ./app/ .    
 
 EXPOSE 5000
 

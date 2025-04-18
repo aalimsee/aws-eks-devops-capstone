@@ -16,12 +16,11 @@ gh secret set AWS_SECRET_ACCESS_KEY -b"xxx" -r aalimsee/aws-eks-devops-capstone 
 ```
 
 ## Create a private Amazon ECR repository
-
-```aws ecr create-repository \
+```
+aws ecr create-repository \
   --repository-name product-service \
   --image-scanning-configuration scanOnPush=true \
-  --region us-east-1 \
-  --tags Key=ProjectName,Value=aws-eks-devops-capstone
+  --region us-east-1
 ```
 
 ## How to check if app running
@@ -35,4 +34,8 @@ kubectl get nodes
 
 kubectl get pods -n dev
 kubectl get deployments -n dev
+
+kubectl get svc -n dev
+kubectl apply -f service.yaml
+
 ```

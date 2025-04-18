@@ -1,0 +1,65 @@
+
+
+
+name: Destroy Prod Environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy-prod:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-1
+      EKS_CLUSTER_NAME: prod-eks-cluster
+      ENVIRONMENT: prod
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./infra
+        run: terraform init -backend-config=backend-${{ env.ENVIRONMENT }}.config
+
+      - name: Select Workspace
+        working-directory: ./infra
+        run: terraform workspace select ${{ env.ENVIRONMENT }}
+
+      - name: Terraform Destroy
+        working-directory: ./infra
+        run: terraform destroy -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
+
+      - name: Empty Frontend S3 Bucket
+        run: |
+          aws s3 rm s3://your-frontend-s3-bucket-${{ env.ENVIRONMENT }} --recursive || echo "Bucket already empty or doesn't exist"
+
+      - name: Notify Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ":fire: PROD environment teardown complete! (`${{ github.repository }}`)"
+          SLACK_COLOR: "#D00000"
+
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.your-email-provider.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "[PROD Teardown Completed] ${{ github.repository }}"
+          body: "Terraform destroy for production environment has completed successfully!"
+          to: "your-team@example.com"
+          from: "GitHub Actions <noreply@example.com>"
