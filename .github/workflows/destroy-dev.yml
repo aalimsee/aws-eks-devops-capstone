@@ -51,9 +51,9 @@ jobs:
         working-directory: ./infra
         run: terraform destroy -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
 
-      - name: Empty Frontend S3 Bucket
-        run: |
-          aws s3 rm s3://your-frontend-s3-bucket-${{ env.ENVIRONMENT }} --recursive || echo "Bucket already empty or doesn't exist"
+      # - name: Empty Frontend S3 Bucket
+      #   run: |
+      #     aws s3 rm s3://your-frontend-s3-bucket-${{ env.ENVIRONMENT }} --recursive || echo "Bucket already empty or doesn't exist"
 
       - name: Log completion
         run: echo "Dev environment destroyed successfully!"
