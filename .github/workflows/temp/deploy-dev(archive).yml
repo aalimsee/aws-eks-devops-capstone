@@ -1,4 +1,4 @@
-name: Deploy to EKS (Dev)
+name: Deploy to EKS (Dev) (deploy-dev(archive))
 
 on:
   push:
