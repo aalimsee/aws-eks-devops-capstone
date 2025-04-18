@@ -61,15 +61,15 @@ jobs:
           envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/deployment.yaml | kubectl apply -f -
           kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/service.yaml
 
-      - name: Build React Frontend
-        working-directory: ./frontend
-        run: |
-          npm ci
-          export REACT_APP_API_URL="http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')/api"
-          echo "Backend API URL: $REACT_APP_API_URL"
-          npm run build
 
-          
+      # - name: Build React Frontend
+      #   working-directory: ./frontend
+      #   run: |
+      #     npm ci
+      #     export REACT_APP_API_URL="http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')/api"
+      #     echo "Backend API URL: $REACT_APP_API_URL"
+      #     npm run build
+
       # - name: Deploy Frontend to S3
       #   working-directory: ./frontend
       #   run: |
