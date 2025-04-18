@@ -49,6 +49,20 @@ jobs:
         run: |
           terraform workspace select ${{ env.ENVIRONMENT }}
 
+# Terraform only deletes resources it created — the ALB is not in its state, so it doesn’t know about it.
+# The ALB is a byproduct of your Kubernetes Service — not Terraform.
+
+      - name: Update kubeconfig for EKS
+        run: aws eks update-kubeconfig --name ${{ env.ENVIRONMENT }}-eks-cluster --region ${{ env.AWS_REGION }}
+  
+      - name: Delete Kubernetes Services to free ALBs
+        run: |
+            kubectl delete service product-service -n ${{ env.ENVIRONMENT }} || echo "Service already deleted or not found."
+  
+      - name: Sleep to allow ALB to deprovision
+        run: sleep 120
+
+        
       - name: Terraform Destroy
         working-directory: ./infra
         run: terraform destroy -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
