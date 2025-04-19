@@ -25,9 +25,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, Tag and Push Docker Image to ECR
+      - name: Build and Push Backend Docker Image to ECR
         run: |
           IMAGE_TAG="${GITHUB_REF##*/}-${GITHUB_SHA}"
           IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/product-service"
           docker build -t $IMAGE_URI:$IMAGE_TAG ./product-service
           docker push $IMAGE_URI:$IMAGE_TAG
+
+      - name: Build and Push Frontend Docker image to ECR
+        run: |
+          IMAGE_TAG="${{ github.ref_name }}-${{ github.sha }}"
+          IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/react-frontend"
+          docker build -t $IMAGE_URI:$IMAGE_TAG ./frontend
+          docker push $IMAGE_URI:$IMAGE_TAG
+
+          

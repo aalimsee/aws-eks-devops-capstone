@@ -21,6 +21,11 @@ aws ecr create-repository \
   --repository-name product-service \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1
+
+aws ecr create-repository \
+  --repository-name react-frontend \
+  --image-scanning-configuration scanOnPush=true \
+  --region us-east-1  
 ```
 
 ## How to check if app running
