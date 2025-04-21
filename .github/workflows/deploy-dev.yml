@@ -48,6 +48,7 @@ jobs:
           terraform workspace select ${{ env.ENVIRONMENT }} || terraform workspace new ${{ env.ENVIRONMENT }}
           terraform apply -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
 
+
       - name: Update kubeconfig for EKS Cluster
         run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
@@ -69,6 +70,7 @@ jobs:
           product-service=$IMAGE_URI:$IMAGE_TAG \
           -n ${{ env.ENVIRONMENT }}
 
+          
       # - name: Build React Frontend
       #   working-directory: ./frontend
       #   run: |
