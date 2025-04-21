@@ -70,7 +70,7 @@ jobs:
           product-service=$IMAGE_URI:$IMAGE_TAG \
           -n ${{ env.ENVIRONMENT }}
 
-
+          
       - name: Build React Frontend
         working-directory: ./frontend
         run: |
