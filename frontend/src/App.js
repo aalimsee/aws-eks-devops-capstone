@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://a6ea81d9551ec437e98ab8746f7baf93-84350743.us-east-1.elb.amazonaws.com/product')
+    fetch(`${process.env.REACT_APP_API_URL}/product`)
   // Adjust this to your backend endpoint
       .then(response => response.json())
       .then(data => {
