@@ -8,7 +8,8 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/product')  // Adjust this to your backend endpoint
+    fetch('http://flask-service:5000/product')
+  // Adjust this to your backend endpoint
       .then(response => response.json())
       .then(data => {
         setProducts(data);
