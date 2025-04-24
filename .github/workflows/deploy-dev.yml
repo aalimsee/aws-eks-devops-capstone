@@ -75,7 +75,7 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
-          export REACT_APP_API_URL="http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')/api"
+          export REACT_APP_API_URL="http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')/"
           echo "Backend API URL: $REACT_APP_API_URL"
           npm run build
 

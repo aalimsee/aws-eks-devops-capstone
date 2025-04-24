@@ -44,3 +44,22 @@ kubectl get svc -n dev
 kubectl apply -f service.yaml
 
 ```
+
+# Local Developer Command for Consistency Check
+Developers can run this locally before pushing:
+```
+cd frontend
+cp package-lock.json package-lock.bak
+npm install --package-lock-only --ignore-scripts
+diff package-lock.json package-lock.bak && echo "✅ In sync" || echo "❌ Out of sync"
+```
+
+# Fix the Issue
+Here’s what to do locally:
+```
+cd frontend
+rm package-lock.json
+npm install
+```
+
+This will regenerate a clean and in-sync package-lock.json file using what's declared in package.json.
