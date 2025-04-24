@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/products')  // Adjust this to your backend endpoint
+    fetch('/product')  // Adjust this to your backend endpoint
       .then(response => response.json())
       .then(data => {
         setProducts(data);
