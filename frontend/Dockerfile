@@ -6,7 +6,7 @@ FROM node:18-alpine as build
 WORKDIR /app
 COPY package*.json ./
 # Use npm ci if package-lock.json is present (recommended for CI/CD)
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
