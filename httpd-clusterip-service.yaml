@@ -5,6 +5,7 @@ kind: Service
 metadata:
   name: aaron-clusterip-service
   namespace: aaron-eks-activity
+
 spec:
   type: ClusterIP
   selector:

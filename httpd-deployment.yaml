@@ -1,8 +1,11 @@
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aaron-sample-httpd-app
   namespace: aaron-eks-activity
+
 spec:
   replicas: 2
   selector:
@@ -12,22 +15,27 @@ spec:
     metadata:
       labels:
         app: httpd-app
+
     spec:
       containers:
         - name: httpd-app
           image: hashicorp/http-echo:latest
+          
           args:
           - "-text=$(WELCOME_MESSAGE)"
+          
           env:
             - name: WELCOME_MESSAGE
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: welcome-message
+            
             - name: APP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: sample-secret
                   key: password
+          
           ports:
             - containerPort: 5678

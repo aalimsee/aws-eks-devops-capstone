@@ -5,6 +5,7 @@ kind: Service
 metadata:
   name: aaron-nodeport-service
   namespace: aaron-eks-activity
+
 spec:
   type: NodePort
   selector:

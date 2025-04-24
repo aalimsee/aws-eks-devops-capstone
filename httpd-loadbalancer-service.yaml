@@ -5,6 +5,7 @@ kind: Service
 metadata:
   name: aaron-loadbalancer-service
   namespace: aaron-eks-activity
+
 spec:
   type: LoadBalancer
   selector:
