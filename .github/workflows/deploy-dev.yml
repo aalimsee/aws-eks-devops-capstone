@@ -83,8 +83,8 @@ jobs:
 
       - name: Deploy React Frontend to EKS
         run: |
-          export IMAGE_TAG=${{ env.ENVIRONMENT }}-${{ github.sha }}
-          export IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/group-1/react-frontend
+          IMAGE_TAG=${{ env.ENVIRONMENT }}-${{ github.sha }}
+          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/group-1/react-frontend
           envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-deployment.yaml | kubectl apply -f -
           kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-service.yaml
 
