@@ -7,11 +7,26 @@ function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_API_URL}/product`)
+  // // Adjust this to your backend endpoint
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setProducts(data);
+  //       setLoading(false);
+  //     })
+  //     .catch(err => {
+  //       console.error('Error fetching products:', err);
+  //       setLoading(false);
+  //     });
+  // }, []);
+
   useEffect(() => {
+    console.log('Fetching from:', `${process.env.REACT_APP_API_URL}/product`);
     fetch(`${process.env.REACT_APP_API_URL}/product`)
-  // Adjust this to your backend endpoint
       .then(response => response.json())
       .then(data => {
+        console.log('Fetched data:', data);
         setProducts(data);
         setLoading(false);
       })
