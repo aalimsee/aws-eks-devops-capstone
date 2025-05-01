@@ -39,4 +39,3 @@ jobs:
           IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/group-1/react-frontend"
           docker build -t $IMAGE_URI:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
           docker push $IMAGE_URI:$IMAGE_TAG
-

@@ -15,11 +15,11 @@ spec:
     spec:
       containers:
         - name: react-frontend
-          image: 
+          image:
             255945442255.dkr.ecr.us-east-1.amazonaws.com/\
-            react-frontend:dev-${GITHUB_SHA}
+            group-1/react-frontend:dev-${GITHUB_SHA}
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           resources:
             requests:
               cpu: "100m"

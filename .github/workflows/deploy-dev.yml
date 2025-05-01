@@ -72,12 +72,6 @@ jobs:
           -n ${{ env.ENVIRONMENT }}
 
 
-        
-      - name: Deploy React Frontend to EKS
-        run: |
-          export IMAGE_TAG="${{ env.ENVIRONMENT }}-${{ github.sha }}"
-          envsubst < ./k8s/frontend-deployment.yaml | kubectl apply -f -
-          kubectl apply -f ./k8s/frontend-service.yaml
 
       - name: Build React Frontend
         working-directory: ./frontend
@@ -87,7 +81,14 @@ jobs:
           cat .env
           npm run build
 
-          
+      - name: Deploy React Frontend to EKS
+        run: |
+          export IMAGE_TAG=${{ env.ENVIRONMENT }}-${{ github.sha }}
+          export IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/group-1/react-frontend
+          envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-deployment.yaml | kubectl apply -f -
+          kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-service.yaml
+
+
 
       # - name: Deploy Frontend to S3
       #   working-directory: ./frontend
