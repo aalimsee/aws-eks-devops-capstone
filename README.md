@@ -63,3 +63,7 @@ npm install
 ```
 
 This will regenerate a clean and in-sync package-lock.json file using what's declared in package.json.
+
+# Screenshots
+![Backend page](images/product-service.png)
+![Frontend page](images/react-frontend.png)
