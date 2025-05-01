@@ -16,7 +16,7 @@ on:
 
 jobs:
   destroy-prod:
-    if: github.ref == 'refs/heads/prod'
+    if: ${{ github.ref == 'refs/heads/prod' }}
     runs-on: ubuntu-latest
 
     env:

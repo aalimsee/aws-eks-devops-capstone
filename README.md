@@ -18,12 +18,12 @@ gh secret set AWS_SECRET_ACCESS_KEY -b"xxx" -r aalimsee/aws-eks-devops-capstone 
 ## Create a private Amazon ECR repository
 ```
 aws ecr create-repository \
-  --repository-name product-service \
+  --repository-name group-1/product-service \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1
 
 aws ecr create-repository \
-  --repository-name react-frontend \
+  --repository-name group-1/react-frontend \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1  
 ```

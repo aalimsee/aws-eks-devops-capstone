@@ -17,7 +17,7 @@ on:
 # job only runs when the workflow is triggered from the dev branch
 jobs:
   destroy-dev:
-    if: github.ref == 'refs/heads/dev'
+    if: ${{ github.ref == 'refs/heads/dev' }}
     runs-on: ubuntu-latest
 
     env:
