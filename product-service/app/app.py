@@ -16,7 +16,7 @@ def health():
 @app.route("/product")
 def product():
     return jsonify([
-        {"message": "CreatedBy - By Aaron"},
+#        {"message": "CreatedBy - By Aaron"},
         {"name": "Laptop", "price": 999},
         {"name": "Mouse", "price": 25},
         {"name": "Keyboard", "price": 45}
