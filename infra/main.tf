@@ -2,7 +2,7 @@
 
 # EKS Cluster Role
 resource "aws_iam_role" "eks_cluster" {
-  name               = "${env}-eks-cluster-role"
+  name               = "${var.env}-eks-cluster-role"
   assume_role_policy = data.aws_iam_policy_document.eks_cluster_assume_role_policy.json
 }
 
@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
 
 # Create EKS Cluster
 resource "aws_eks_cluster" "eks" {
-  name     = "${env}-eks-cluster"
+  name     = "${var.env}-eks-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
   version  = "1.32"
 
@@ -50,7 +50,7 @@ resource "aws_eks_cluster" "eks" {
 
 # Node Group IAM Role
 resource "aws_iam_role" "node_group" {
-  name               = "${env}-eks-node-group-role"
+  name               = "${var.env}-eks-node-group-role"
   assume_role_policy = data.aws_iam_policy_document.node_group_assume_role_policy.json
 }
 
@@ -87,7 +87,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
 # Managed Node Group
 resource "aws_eks_node_group" "workers" {
   cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "${env}-workers"
+  node_group_name = "${var.env}-workers"
   node_role_arn   = aws_iam_role.node_group.arn
   subnet_ids      = data.aws_subnets.public.ids
 
