@@ -26,9 +26,11 @@ function App() {
       <h1>Product List</h1>
       {loading ? <p>Loading...</p> : (
         <ul>
-          {products.map((product, index) => (
+        {products
+          .filter(product => product.name && product.price)
+          .map((product, index) => (
             <li key={index}>{product.name} — ${product.price}</li>
-          ))}
+        ))}
         </ul>
       )}
     </div>
