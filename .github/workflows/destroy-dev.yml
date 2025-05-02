@@ -58,6 +58,7 @@ jobs:
       - name: Delete Kubernetes Services to free ALBs
         run: |
             kubectl delete service product-service -n ${{ env.ENVIRONMENT }} || echo "Service already deleted or not found."
+            kubectl delete service react-frontend -n ${{ env.ENVIRONMENT }} || echo "Service already deleted or not found."
   
       - name: Sleep to allow ALB to deprovision
         run: sleep 120

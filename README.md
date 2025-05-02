@@ -64,6 +64,14 @@ npm install
 
 This will regenerate a clean and in-sync package-lock.json file using what's declared in package.json.
 
+# Attached IGW to VPC
+vpc-0c722a730b6fb8216 / aws-eks-devops-capstone-vpc
+igw-0308f6f88d5d2c7fa / aws-eks-devops-capstone-igw
+
+```
+aws ec2 attach-internet-gateway --vpc-id "vpc-0c722a730b6fb8216" --internet-gateway-id "igw-0308f6f88d5d2c7fa" --region us-east-1
+```
+
 # Screenshots
 ![Backend page](images/product-service.png)
 ![Frontend page](images/react-frontend.png)

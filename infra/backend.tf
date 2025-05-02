@@ -12,6 +12,11 @@
 # Enables state locking and prevents race conditions
 # dynamodb_table = "terraform-locks"
 
+# Create directory structure in s3 bucket, sctp-ce9-tfstate
+# group-1/eks/dev
+# group-1/eks/test
+# group-1/eks/prod
+
 
 terraform {
   backend "s3" {}
