@@ -73,25 +73,12 @@ jobs:
 
 
 
-      # - name: Get current backend API URL
-      #   working-directory: ./frontend
-      #   run: |
-      #     export API_URL="http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
-      #     echo "REACT_APP_API_URL=$API_URL" > frontend/.env
-      #     cat frontend/.env
-
-      # - name: Build React Frontend with correct API URL
-      #   working-directory: ./frontend
-      #   run: |
-      #     npm ci
-      #     npm run build
-
       - name: Build React Frontend
         working-directory: ./frontend
         run: |
-          npm ci
           echo "REACT_APP_API_URL=http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > .env
           cat .env
+          npm ci
           npm run build
 
       - name: Deploy React Frontend to EKS
