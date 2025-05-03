@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Init & Apply
         working-directory: ./infra
         run: |
-          terraform init -backend-config=backend-${{ env.ENVIRONMENT }}.config
+          terraform init -backend-config="./backend-${{ env.ENVIRONMENT }}.config"
           terraform workspace select ${{ env.ENVIRONMENT }} || terraform workspace new ${{ env.ENVIRONMENT }}
           terraform apply -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
 

@@ -75,3 +75,13 @@ aws ec2 attach-internet-gateway --vpc-id "vpc-0c722a730b6fb8216" --internet-gate
 # Screenshots
 ![Backend page](images/product-service.png)
 ![Frontend page](images/react-frontend.png)
+
+
+
+# Backup codes
+./frontend/.env
+
+# URL to be update with current backend LB
+# REACT_APP_API_URL=http://<your-backend-LB-URL>
+# need to find way(s) to automatic URL importing
+REACT_APP_API_URL=http://a83145f33b7b3421c81a7816fcf6de57-793523646.us-east-1.elb.amazonaws.com/
