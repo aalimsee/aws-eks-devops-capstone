@@ -24,7 +24,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
-      EKS_CLUSTER_NAME: dev-eks-cluster
+      EKS_CLUSTER_NAME: ce-grp-1-dev-eks-cluster
       ENVIRONMENT: dev
 
     steps:
