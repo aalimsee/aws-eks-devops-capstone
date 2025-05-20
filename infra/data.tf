@@ -8,7 +8,7 @@
 data "aws_vpcs" "filtered_vpcs" {
   filter {
     name   = "tag:Name"
-    values = ["*${var.vpcName}*"]
+    values = ["*${var.grpName}*"]
   }
 }
 
@@ -29,7 +29,7 @@ data "aws_subnets" "public" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${var.vpcName}*public*"
+    Name = "*${var.grpName}*public*"
   }
 }
 
@@ -41,6 +41,6 @@ data "aws_subnets" "private" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${var.vpcName}*private*"
+    Name = "*${var.grpName}*private*"
   }
 }
