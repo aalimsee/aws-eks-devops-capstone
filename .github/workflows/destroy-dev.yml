@@ -53,7 +53,7 @@ jobs:
 # The ALB is a byproduct of your Kubernetes Service — not Terraform.
 
       - name: Update kubeconfig for EKS
-        run: aws eks update-kubeconfig --name ${{ env.ENVIRONMENT }}-eks-cluster --region ${{ env.AWS_REGION }}
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
   
       - name: Delete Kubernetes Services to free ALBs
         run: |
