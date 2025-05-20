@@ -18,12 +18,12 @@ gh secret set AWS_SECRET_ACCESS_KEY -b"xxx" -r aalimsee/aws-eks-devops-capstone 
 ## Create a private Amazon ECR repository
 ```
 aws ecr create-repository \
-  --repository-name group-1/product-service \
+  --repository-name ce-grp-1/product-service \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1
 
 aws ecr create-repository \
-  --repository-name group-1/react-frontend \
+  --repository-name ce-grp-1/react-frontend \
   --image-scanning-configuration scanOnPush=true \
   --region us-east-1  
 ```
@@ -84,4 +84,39 @@ aws ec2 attach-internet-gateway --vpc-id "vpc-0c722a730b6fb8216" --internet-gate
 # URL to be update with current backend LB
 # REACT_APP_API_URL=http://<your-backend-LB-URL>
 # need to find way(s) to automatic URL importing
-REACT_APP_API_URL=http://a83145f33b7b3421c81a7816fcf6de57-793523646.us-east-1.elb.amazonaws.com/
+REACT_APP_API_URL=http://aa81c36249b744843b6745da0799199c-1469172292.us-east-1.elb.amazonaws.com/
+
+# Add user access
+```kubectl edit configmap aws-auth -n kube-system
+```
+
+format (pending Huang's username)
+```  mapUsers: |
+    - userarn: arn:aws:iam::255945442255:user/aalimsee_ce9
+      username: aalimsee_ce9
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::255945442255:user/lukej-ce9
+      username: lukej-ce9
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::255945442255:user/clifford_ce9
+      username: clifford_ce9
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::255945442255:user/azni_ce9
+      username: azni_ce9
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::255945442255:user/dhts1990
+      username: azni_ce9
+      groups:
+        - system:masters
+```
+
+# Verify user access
+```
+aws sts get-caller-identity                   
+aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+kubectl get nodes
+```

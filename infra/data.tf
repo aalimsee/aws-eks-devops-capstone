@@ -8,7 +8,7 @@
 data "aws_vpcs" "filtered_vpcs" {
   filter {
     name   = "tag:Name"
-    values = ["*${var.projectName}*"]
+    values = ["*${var.vpcName}*"]
   }
 }
 
@@ -29,7 +29,7 @@ data "aws_subnets" "public" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${var.projectName}*public*"
+    Name = "*${var.vpcName}*public*"
   }
 }
 
@@ -41,22 +41,6 @@ data "aws_subnets" "private" {
     values = data.aws_vpcs.filtered_vpcs.ids
   }
   tags = {
-    Name = "*${var.projectName}*private*"
+    Name = "*${var.vpcName}*private*"
   }
 }
-
-//output "vpcs" {value = data.aws_vpcs.filtered_vpcs.ids}
-
-//output "subnet_ids" {value = data.aws_subnets.filtered_subnets.ids}
-
-//output "public_subnet_ids" {value = data.aws_subnets.public.ids}
-# Fetch one public subnets
-# output "public_subnet_id1" {value = data.aws_subnets.public.ids[0]}
-# output "public_subnet_id2" {value = data.aws_subnets.public.ids[1]}
-# output "public_subnet_id3" {value = data.aws_subnets.public.ids[2]}
-
-//output "private_subnet_ids" {value = data.aws_subnets.private.ids}
-# Fetch one public subnets
-# output "private_subnet_id1" {value = data.aws_subnets.private.ids[0]}
-# output "private_subnet_id2" {value = data.aws_subnets.private.ids[1]}
-# output "private_subnet_id3" {value = data.aws_subnets.private.ids[2]}

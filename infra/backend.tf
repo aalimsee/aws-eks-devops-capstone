@@ -7,15 +7,15 @@
 
 # Misc:
 # ${terraform.workspace}: Automatically segregates state files for dev, test, prod
-# key = "group-1/eks/${terraform.workspace}/aws-eks-devops-capstone.tfstate"
+# key = "ce-grp-1/${terraform.workspace}/aws-eks-devops-capstone.tfstate"
 
 # Enables state locking and prevents race conditions
 # dynamodb_table = "terraform-locks"
 
 # Create directory structure in s3 bucket, sctp-ce9-tfstate
-# group-1/eks/dev
-# group-1/eks/test
-# group-1/eks/prod
+# ce-grp-1/dev
+# ce-grp-1/test
+# ce-grp-1/prod
 
 
 terraform {
