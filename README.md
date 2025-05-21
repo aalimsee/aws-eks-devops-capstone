@@ -32,7 +32,7 @@ aws ecr create-repository \
 
 ```
 aws eks list-clusters --region us-east-1
-aws eks update-kubeconfig --name dev-eks-cluster --region us-east-1
+aws eks update-kubeconfig --name ce-grp-1-dev-eks-cluster --region us-east-1
 
 kubectl config current-context
 kubectl get nodes
