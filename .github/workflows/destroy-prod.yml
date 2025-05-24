@@ -9,7 +9,7 @@
 # Replace:
 # your-frontend-s3-bucket-${{ env.ENVIRONMENT }} with your actual S3 bucket name.
 
-name: Destroy Prod Environment
+name: Destroy * Prod Env
 
 on:
   workflow_dispatch:

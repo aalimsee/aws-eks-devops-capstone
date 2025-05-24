@@ -11,7 +11,7 @@
 # YOUR_CLOUDFRONT_DIST_ID
 # with your real resource names.
 
-name: Dev Environment Deploy
+name: Deploy Dev Env
 
 on:
   push:
