@@ -56,38 +56,37 @@ jobs:
         run: |
           kubectl get namespace ${{ env.ENVIRONMENT }} || kubectl create namespace ${{ env.ENVIRONMENT }}
 
-          
-      - name: Deploy product-service to EKS
-        run: |
-          export IMAGE_TAG="${{ env.ENVIRONMENT }}-${{ github.sha }}"
-          envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/deployment.yaml | kubectl apply -f -
-          kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/service.yaml
 
-      - name: Update Deployment Image
-        run: |
-          IMAGE_TAG="${GITHUB_REF##*/}-${GITHUB_SHA}"
-          IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-1/product-service"
-          kubectl set image deployment/product-service \
-          product-service=$IMAGE_URI:$IMAGE_TAG \
-          -n ${{ env.ENVIRONMENT }}
+      # - name: Deploy product-service to EKS
+      #   run: |
+      #     export IMAGE_TAG="${{ env.ENVIRONMENT }}-${{ github.sha }}"
+      #     envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/deployment.yaml | kubectl apply -f -
+      #     kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/service.yaml
 
-
-
-      - name: Build React Frontend
-        working-directory: ./frontend
-        run: |
-          echo "REACT_APP_API_URL=http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > .env
-          cat .env
-          npm ci --prefix frontend
-          NODE_OPTIONS=--openssl-legacy-provider npm run build --prefix frontend
+      # - name: Update Deployment Image
+      #   run: |
+      #     IMAGE_TAG="${GITHUB_REF##*/}-${GITHUB_SHA}"
+      #     IMAGE_URI="255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-1/product-service"
+      #     kubectl set image deployment/product-service \
+      #     product-service=$IMAGE_URI:$IMAGE_TAG \
+      #     -n ${{ env.ENVIRONMENT }}
 
 
-      - name: Deploy React Frontend to EKS
-        run: |
-          IMAGE_TAG=${{ env.ENVIRONMENT }}-${{ github.sha }}
-          IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-1/react-frontend
-          envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-deployment.yaml | kubectl apply -f -
-          kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-service.yaml
+
+      # - name: Build React Frontend
+      #   working-directory: ./frontend
+      #   run: |
+      #     echo "REACT_APP_API_URL=http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > .env
+      #     cat .env
+      #     npm ci --prefix frontend
+      #     NODE_OPTIONS=--openssl-legacy-provider npm run build --prefix frontend
+
+      # - name: Deploy React Frontend to EKS
+      #   run: |
+      #     IMAGE_TAG=${{ env.ENVIRONMENT }}-${{ github.sha }}
+      #     IMAGE_URI=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-1/react-frontend
+      #     envsubst < ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-deployment.yaml | kubectl apply -f -
+      #     kubectl apply -f ./product-service/k8s/${{ env.ENVIRONMENT }}/frontend-service.yaml
 
 
 
