@@ -1,0 +1,63 @@
+
+# Summary:
+# Deploys your Infra via Terraform (infra/)
+# Updates kubeconfig for dev-eks-cluster.
+# Deploys product-service backend into dev namespace.
+# Builds your React frontend with the correct backend URL from Kubernetes Service.
+# Deploys frontend to S3 and invalidates CloudFront for instant updates.
+
+# Replace:
+# your-frontend-s3-bucket-${{ env.ENVIRONMENT }}
+# YOUR_CLOUDFRONT_DIST_ID
+# with your real resource names.
+
+name: Deploy ArgoCD
+
+on:
+  push:
+    branches:
+      - dev  # Runs only when you push to 'dev' branch
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-1
+      EKS_CLUSTER_NAME: ce-grp-1-dev-eks-cluster
+      ENVIRONMENT: dev
+      ENV_TEST: test
+      ENV_PROD: prod
+
+    steps:
+    #   - name: Checkout Repository
+    #     uses: actions/checkout@v4
+
+    #   - name: Configure AWS credentials
+    #     uses: aws-actions/configure-aws-credentials@v4
+    #     with:
+    #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #       aws-region: ${{ env.AWS_REGION }}
+
+    #   - name: Set up Terraform
+    #     uses: hashicorp/setup-terraform@v3
+
+    #   - name: Terraform Init & Apply
+    #     working-directory: ./infra
+    #     run: |
+    #       terraform init -backend-config="./backend-${{ env.ENVIRONMENT }}.config"
+    #       terraform workspace select ${{ env.ENVIRONMENT }} || terraform workspace new ${{ env.ENVIRONMENT }}
+    #       terraform apply -var-file=${{ env.ENVIRONMENT }}.tfvars -auto-approve
+
+
+      - name: Update kubeconfig for EKS Cluster
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Ensure Namespace Exists
+        run: |
+           kubectl get namespace ${{ env.ENVIRONMENT }} || kubectl create namespace ${{ env.ENVIRONMENT }}
+           kubectl get namespace ${{ env.ENV_TEST }} || kubectl create namespace ${{ env.ENV_TEST }}
+           kubectl get namespace ${{ env.ENV_PROD }} || kubectl create namespace ${{ env.ENV_PROD }}
+           kubectl get namespace argocd || kubectl create namespace argocd
+           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
