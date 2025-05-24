@@ -78,8 +78,9 @@ jobs:
         run: |
           echo "REACT_APP_API_URL=http://$(kubectl get svc product-service -n ${{ env.ENVIRONMENT }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > .env
           cat .env
-          npm ci
-          npm run build
+          npm ci --prefix frontend
+          NODE_OPTIONS=--openssl-legacy-provider npm run build --prefix frontend
+
 
       - name: Deploy React Frontend to EKS
         run: |
