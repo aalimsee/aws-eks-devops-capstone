@@ -4,6 +4,7 @@ Cohort 9 - CE9
 # Setup infra
 1. Attached the igw to vpc
 2. Create ECR for application image
+3. Git Push > check Git Actions for progress...
 
 
 # aws-eks-devops-capstone
