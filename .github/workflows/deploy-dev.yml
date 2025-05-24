@@ -61,6 +61,42 @@ jobs:
           kubectl get namespace ${{ env.ENV_PROD }} || kubectl create namespace ${{ env.ENV_PROD }}
 
 
+  ########################################
+  # Add a job for snyk scan of your code #
+  ########################################
+
+  ########################################
+  # # job name: snyk-checks
+  # snyk-checks:
+  #   runs-on: ubuntu-latest
+  #   needs: Initial-Checks
+  #   outputs:
+  #     status: ${{ job.status }}
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '18'
+
+  #     - name: Install dependencies
+  #       run: npm install
+
+  #     - name: Install Snyk CLI
+  #       run: npm install -g snyk
+
+  #     - name: Run Snyk Tests
+  #       run: |
+  #         snyk code test
+  #         snyk test
+  #         snyk iac test
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
+
       # - name: Deploy product-service to EKS
       #   run: |
       #     export IMAGE_TAG="${{ env.ENVIRONMENT }}-${{ github.sha }}"
