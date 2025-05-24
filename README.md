@@ -1,4 +1,10 @@
-# CE9 CapStone Project
+# CE-GRP-1 CapStone Project
+Cohort 9 - CE9
+
+# Setup infra
+1. Attached the igw to vpc
+2. Create ECR for application image
+
 
 # aws-eks-devops-capstone
 
