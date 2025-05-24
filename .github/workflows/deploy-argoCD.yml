@@ -61,3 +61,8 @@ jobs:
            kubectl get namespace ${{ env.ENV_PROD }} || kubectl create namespace ${{ env.ENV_PROD }}
            kubectl get namespace argocd || kubectl create namespace argocd
            kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+            # argocd app create my-app \
+            # --repo https://github.com/aalimsee/aws-eks-devops-capstone.git \
+            # --path product-service/k8s/dev \
+            # --dest-server https://kubernetes.default.svc \
+            # --dest-namespace default

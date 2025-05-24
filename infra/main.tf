@@ -33,9 +33,9 @@ resource "aws_eks_cluster" "eks" {
   version  = "1.32"
 
   vpc_config {
-    subnet_ids              = data.aws_subnets.public.ids
+    subnet_ids              = data.aws_subnets.private.ids # updated to private subnet
     endpoint_public_access  = true
-    endpoint_private_access = false
+    endpoint_private_access = true # false
   }
 
   depends_on = [
@@ -89,7 +89,7 @@ resource "aws_eks_node_group" "workers" {
   cluster_name    = aws_eks_cluster.eks.name
   node_group_name = "${var.grpName}-${var.env}-workers"
   node_role_arn   = aws_iam_role.node_group.arn
-  subnet_ids      = data.aws_subnets.public.ids
+  subnet_ids      = data.aws_subnets.private.ids # updated to private subnets
 
   scaling_config {
     desired_size = 1
